@@ -1,6 +1,7 @@
 export { AlertCard } from './AlertCard'
 export { Skeleton } from './LoadingSkeleton'
-export { CategoryCard } from './CategoryCard'
+export { CategoryCard, type MetricDisplayMode } from './CategoryCard'
+export { DashboardInsight } from './DashboardInsight'
 export { MarketTable } from './MarketTable'
 export { MetricBadge } from './MetricBadge'
 export { MetricStrip } from './MetricStrip'

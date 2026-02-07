@@ -23,7 +23,6 @@ export default function CategoryDetailPage({ params }: Props) {
   const radarData = [
     { metric: 'Momentum', value: trend.metrics.momentum, fullMark: 100 },
     { metric: 'Stability', value: trend.metrics.stability, fullMark: 100 },
-    { metric: 'Agreement', value: trend.metrics.agreement, fullMark: 100 },
     { metric: 'Urgency', value: trend.metrics.urgency, fullMark: 100 },
   ]
 
@@ -37,11 +36,6 @@ export default function CategoryDetailPage({ params }: Props) {
       label: 'Stability',
       value: trend.metrics.stability,
       desc: 'Consistency across data sources. Higher stability means more reliable signals.',
-    },
-    {
-      label: 'Agreement',
-      value: trend.metrics.agreement,
-      desc: 'Consensus among indicators. Strong agreement indicates confidence in the trend.',
     },
     {
       label: 'Urgency',

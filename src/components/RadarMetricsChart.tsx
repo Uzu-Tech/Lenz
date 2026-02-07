@@ -13,9 +13,10 @@ import {
 type RadarMetricsChartProps = {
   data: Array<{ metric: string; value: number; fullMark: number }>
   className?: string
+  compact?: boolean
 }
 
-export function RadarMetricsChart({ data, className = '' }: RadarMetricsChartProps) {
+export function RadarMetricsChart({ data, className = '', compact }: RadarMetricsChartProps) {
   const chartData = data.map((d) => ({
     metric: d.metric,
     value: d.value,
@@ -23,7 +24,13 @@ export function RadarMetricsChart({ data, className = '' }: RadarMetricsChartPro
   }))
 
   return (
-    <div className={`aspect-square min-h-[280px] ${className}`}>
+    <div
+      className={
+        compact
+          ? `aspect-square min-h-[160px] ${className}`
+          : `aspect-square min-h-[280px] ${className}`
+      }
+    >
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={chartData}>
           <PolarGrid stroke="#334155" />
