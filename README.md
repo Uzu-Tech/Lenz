@@ -1,30 +1,41 @@
 # Lenz
 
-Lenz is a prediction market platform that lets social media managers and influencers see which trends in fashion, music, and culture are set to take off. By combining trend probabilities, social sentiment, and market insights, Lenz helps creators stay ahead and make data-driven decisions on what content to focus on.
+Prediction market and trend insights platform. A modern web app UI skeleton for exploring trends and trading on social media predictions.
 
-## Dashboard Demo
+## Features
 
-A modern, dark-mode dashboard UI for exploring trends and placing bets. Features:
+- **Insight Dashboard** (`/dashboard`) – Category cards, metric strip, top rising/falling, signal quality alerts
+- **Category Detail** (`/dashboard/category/[id]`) – Radar chart, probability history, driver markets
+- **Trading Markets** (`/markets`) – Market list table with filter/search
+- **Market Detail** (`/markets/[id]`) – Probability chart, trade panel, order book, metrics
 
-- **Sidebar navigation**: Dashboard, Trends, Market Details, Profile
-- **Trend cards**: Name, category, probability bar, momentum (up/down), volume
-- **Probability chart**: Area chart showing history for the selected trend
-- **Filters**: Category, platform (TikTok, Instagram, Spotify), time horizon
-- **Two modes**: **Insights** (view-only) and **Trader** (place bets on trends)
-- **Responsive**: Mobile-friendly with collapsible sidebar
+## Tech
 
-### Run the app
+- Next.js 14 (App Router)
+- React 18
+- TypeScript
+- Tailwind CSS
+- Recharts (available for charts; currently using placeholder divs)
+- Mock data – no backend required
+
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
+Open http://localhost:3000 (redirects to `/dashboard`).
 
-### Tech
+## Components
 
-- React 18 + Vite
-- Tailwind CSS
-- Recharts
-- Lucide React icons
+- `CategoryCard` – Category name, trend index, arrow, sparkline
+- `MetricBadge` / `MetricStrip` – Metric display
+- `SparklineChart` – Placeholder sparkline
+- `RadarMetricsChart` – Placeholder radar
+- `ProbabilityChart` – Placeholder bar chart
+- `MomentumArrow` – ↑ / ↓ / →
+- `AlertCard` – Signal quality alerts
+- `MarketTable` – Markets list with filters
+- `TradePanel` – Buy YES / Buy NO inputs
+- `OrderBookMock` – Bids/asks display
