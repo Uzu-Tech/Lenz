@@ -1,0 +1,22 @@
+{
+  "name": "lenz",
+  "version": "1.0.0",
+  "description": "Lenz - Prediction market platform for trend insights",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx http-server . -p 8080"
+  },
+  "keywords": [
+    "trends",
+    "prediction-market",
+    "influencers",
+    "fashion",
+    "music"
+  ],
+  "author": "Uzu-Tech",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
