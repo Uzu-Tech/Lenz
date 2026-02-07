@@ -32,7 +32,7 @@ export default function MarketsPage() {
         Trading Markets
       </h1>
       <p className="text-slate-500 dark:text-slate-400 mb-8">
-        Trade on trend probabilities – probability shown as price (¢)
+        Trade on trend probabilities – probability shown as percentage, price shown in cents
       </p>
 
       {/* Filters */}

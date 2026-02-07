@@ -13,20 +13,35 @@ import {
 type ProbabilityChartProps = {
   data: Array<{ day: string; value: number }>
   className?: string
+  height?: number
+  unit?: 'percent' | 'cents'
+  showHeader?: boolean
+  title?: string
 }
 
-export function ProbabilityChart({ data, className = '' }: ProbabilityChartProps) {
+export function ProbabilityChart({
+  data,
+  className = '',
+  height = 260,
+  unit = 'percent',
+  showHeader = true,
+  title = 'Probability Over Time',
+}: ProbabilityChartProps) {
   const chartData = data.map((d) => ({
     ...d,
     displayValue: Math.round(d.value),
   }))
 
+  const formatValue = (value: number) => (unit === 'cents' ? `${value}¢` : `${value}%`)
+
   return (
     <div className={`rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-4 ${className}`}>
-      <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-4">
-        Probability Over Time
-      </p>
-      <div className="h-64">
+      {showHeader && (
+        <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-4">
+          {title}
+        </p>
+      )}
+      <div style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <defs>
@@ -49,7 +64,7 @@ export function ProbabilityChart({ data, className = '' }: ProbabilityChartProps
               axisLine={false}
               tickLine={false}
               domain={[0, 100]}
-              tickFormatter={(v) => `${v}¢`}
+              tickFormatter={(v) => formatValue(v)}
             />
             <Tooltip
               contentStyle={{
@@ -58,7 +73,7 @@ export function ProbabilityChart({ data, className = '' }: ProbabilityChartProps
                 borderRadius: '8px',
               }}
               labelStyle={{ color: '#f1f5f9' }}
-              formatter={(value: number) => [`${value}¢`, 'Probability']}
+              formatter={(value: number) => [formatValue(value), 'Probability']}
             />
             <Area
               type="monotone"

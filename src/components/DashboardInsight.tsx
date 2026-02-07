@@ -63,7 +63,10 @@ export function DashboardInsight({ trends, riskAlerts }: DashboardInsightProps) 
                 href={`/dashboard/category/${t.id}`}
                 className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2 rounded"
               >
-                <span className="text-slate-700 dark:text-slate-300">{t.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-700 dark:text-slate-300">{t.name}</span>
+                  <MomentumArrow direction={t.direction} />
+                </div>
                 <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
                   {Math.round(weightedScore(t))}
                 </span>
@@ -82,7 +85,10 @@ export function DashboardInsight({ trends, riskAlerts }: DashboardInsightProps) 
                 href={`/dashboard/category/${t.id}`}
                 className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2 rounded"
               >
-                <span className="text-slate-700 dark:text-slate-300">{t.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-700 dark:text-slate-300">{t.name}</span>
+                  <MomentumArrow direction={t.direction} />
+                </div>
                 <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   {Math.round(weightedScore(t))}
                 </span>
@@ -122,7 +128,7 @@ export function DashboardInsight({ trends, riskAlerts }: DashboardInsightProps) 
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start auto-rows-min">
           {trends.map((t) => (
             <CategoryCard
               key={t.id}
@@ -131,31 +137,57 @@ export function DashboardInsight({ trends, riskAlerts }: DashboardInsightProps) 
               direction={t.direction}
               metrics={t.metrics}
               metricDisplay={metricDisplay}
+              predictions={t.predictions}
             />
           ))}
         </div>
       </section>
 
-      {/* Risk Alert - based on stability only */}
+      {/* Low Stability Warning */}
       <section>
-        <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
-          Risk Alert
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="rounded-xl border border-yellow-200/80 dark:border-yellow-800/40 bg-yellow-50/80 dark:bg-yellow-950/30 p-6">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center">
+              <span className="text-2xl">⚡</span>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-1">
+                Low Stability Trends
+              </h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                These trends have low stability scores. Changes can happen very quickly—monitor closely.
+              </p>
+            </div>
+          </div>
+          
           {riskAlerts.length > 0 ? (
-            riskAlerts.map((a) => (
-              <AlertCard
-                key={a.id}
-                icon={a.icon}
-                category={a.trendName}
-                reason={a.reason}
-                severity={a.severity}
-              />
-            ))
+            <div className="space-y-2">
+              {riskAlerts.map((a) => (
+                <Link
+                  key={a.id}
+                  href={`/dashboard/category/${a.id}`}
+                  className="flex items-center justify-between p-4 rounded-lg bg-white dark:bg-slate-800 border-2 border-yellow-200/70 dark:border-yellow-800/40 hover:border-yellow-300 dark:hover:border-yellow-700 transition-colors group"
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="flex-1">
+                      <p className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-yellow-700 dark:group-hover:text-yellow-400 transition-colors">
+                        {a.trendName}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {a.reason}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-slate-400 dark:text-slate-600 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
           ) : (
-            <p className="text-slate-500 dark:text-slate-400 col-span-2">
-              No stability-related risk alerts. All trends have stability ≥ 70%.
-            </p>
+            <div className="text-center py-4 text-slate-600 dark:text-slate-400">
+              ✓ All trends have stable signals (stability ≥ 70%)
+            </div>
           )}
         </div>
       </section>

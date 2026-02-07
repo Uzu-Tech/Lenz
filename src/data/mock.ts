@@ -6,12 +6,19 @@ export type MetricStrength = {
   urgency: number
 }
 
+export type PredictionQuestion = {
+  id: string
+  question: string
+  probability: number
+}
+
 export type Trend = {
   id: string
   name: string
   direction: 'up' | 'down' | 'flat'
   sparklineData: number[]
   metrics: MetricStrength
+  predictions?: PredictionQuestion[] // Individual predictions aggregated for metrics
 }
 
 export type Market = {
@@ -20,6 +27,7 @@ export type Market = {
   category: string
   trendId?: string // Links to trend for driver markets
   probability: number
+  price: number // Price in cents
   momentum: 'up' | 'down' | 'flat'
   volume: string
   timeRemaining: string
@@ -34,6 +42,10 @@ export const TRENDS: Trend[] = [
     direction: 'up',
     sparklineData: [58, 62, 65, 68, 70, 72, 75],
     metrics: { momentum: 82, stability: 70, urgency: 65 },
+    predictions: [
+      { id: 'p1-1', question: 'Will Y2K fashion dominate Q2?', probability: 0.72 },
+      { id: 'p1-2', question: 'Y2K aesthetic top social trend?', probability: 0.68 },
+    ],
   },
   {
     id: '2',
@@ -41,6 +53,10 @@ export const TRENDS: Trend[] = [
     direction: 'down',
     sparklineData: [52, 50, 48, 47, 46, 45, 42],
     metrics: { momentum: 25, stability: 60, urgency: 40 },
+    predictions: [
+      { id: 'p2-1', question: 'Indie sleaze revival in top 10?', probability: 0.45 },
+      { id: 'p2-2', question: 'Will indie sleaze resurge by 2026?', probability: 0.35 },
+    ],
   },
   {
     id: '3',
@@ -48,6 +64,10 @@ export const TRENDS: Trend[] = [
     direction: 'up',
     sparklineData: [72, 76, 80, 82, 85, 87, 90],
     metrics: { momentum: 92, stability: 55, urgency: 88 },
+    predictions: [
+      { id: 'p3-1', question: 'Stanley Cup trend peak by summer?', probability: 0.82 },
+      { id: 'p3-2', question: 'Stanley Cup top product Q2?', probability: 0.78 },
+    ],
   },
   {
     id: '4',
@@ -55,6 +75,10 @@ export const TRENDS: Trend[] = [
     direction: 'flat',
     sparklineData: [60, 61, 61, 62, 61, 61, 62],
     metrics: { momentum: 48, stability: 85, urgency: 50 },
+    predictions: [
+      { id: 'p4-1', question: 'Coquette aesthetic in top 5?', probability: 0.61 },
+      { id: 'p4-2', question: 'Coquette fashion growth by 2026?', probability: 0.59 },
+    ],
   },
   {
     id: '5',
@@ -62,6 +86,10 @@ export const TRENDS: Trend[] = [
     direction: 'down',
     sparklineData: [72, 68, 64, 60, 58, 55, 52],
     metrics: { momentum: 22, stability: 72, urgency: 35 },
+    predictions: [
+      { id: 'p5-1', question: 'Clean girl aesthetic decline?', probability: 0.52 },
+      { id: 'p5-2', question: 'Clean girl aesthetic exit top trends?', probability: 0.58 },
+    ],
   },
   {
     id: '6',
@@ -69,6 +97,10 @@ export const TRENDS: Trend[] = [
     direction: 'up',
     sparklineData: [62, 65, 68, 70, 72, 74, 76],
     metrics: { momentum: 75, stability: 68, urgency: 58 },
+    predictions: [
+      { id: 'p6-1', question: 'Nostalgia core trend peak by summer?', probability: 0.71 },
+      { id: 'p6-2', question: 'Nostalgia aesthetic dominates Q2?', probability: 0.69 },
+    ],
   },
 ]
 
@@ -83,6 +115,7 @@ export const MARKETS: Market[] = [
     category: 'Fashion',
     trendId: '1',
     probability: 0.72,
+    price: 72,
     momentum: 'up',
     volume: '2.4M',
     timeRemaining: '14d',
@@ -103,6 +136,7 @@ export const MARKETS: Market[] = [
     category: 'Music',
     trendId: '2',
     probability: 0.45,
+    price: 45,
     momentum: 'down',
     volume: '1.2M',
     timeRemaining: '21d',
@@ -123,6 +157,7 @@ export const MARKETS: Market[] = [
     category: 'Products',
     trendId: '3',
     probability: 0.82,
+    price: 82,
     momentum: 'up',
     volume: '3.1M',
     timeRemaining: '7d',
@@ -143,6 +178,7 @@ export const MARKETS: Market[] = [
     category: 'Fashion',
     trendId: '4',
     probability: 0.61,
+    price: 61,
     momentum: 'flat',
     volume: '890K',
     timeRemaining: '28d',
@@ -162,6 +198,7 @@ export const MARKETS: Market[] = [
     question: 'AI fashion tools viral on TikTok?',
     category: 'Tech',
     probability: 0.58,
+    price: 58,
     momentum: 'up',
     volume: '1.5M',
     timeRemaining: '14d',
@@ -182,6 +219,7 @@ export const MARKETS: Market[] = [
     category: 'Lifestyle',
     trendId: '5',
     probability: 0.52,
+    price: 52,
     momentum: 'down',
     volume: '1.1M',
     timeRemaining: '14d',

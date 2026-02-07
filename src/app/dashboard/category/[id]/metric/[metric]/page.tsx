@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { TRENDS, MARKETS } from '@/data/mock'
 
 const METRIC_SLUGS = ['momentum', 'stability', 'urgency'] as const
@@ -17,10 +16,40 @@ type Props = {
   params: { id: string; metric: string }
 }
 
+export const dynamic = 'force-dynamic'
+
+export function generateStaticParams() {
+  const params: Array<{ id: string; metric: string }> = []
+  
+  TRENDS.forEach((trend) => {
+    METRIC_SLUGS.forEach((metric) => {
+      params.push({
+        id: trend.id,
+        metric,
+      })
+    })
+  })
+  
+  return params
+}
+
 export default function MetricBreakdownPage({ params }: Props) {
   const { id, metric } = params
-  const trend = TRENDS.find((t) => t.id === id)
-  if (!trend || !isMetricSlug(metric)) notFound()
+  const trend = TRENDS.find((t) => String(t.id) === String(id))
+  if (!trend || !isMetricSlug(metric)) {
+    return (
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-2">
+            Metric not found
+          </h1>
+          <Link href="/dashboard" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+            Back to Dashboard
+          </Link>
+        </div>
+      </main>
+    )
+  }
 
   const driverMarkets = MARKETS.filter((m) => m.trendId === id)
   const value = trend.metrics[metric as keyof typeof trend.metrics] as number
