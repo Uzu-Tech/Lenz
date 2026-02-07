@@ -29,3 +29,5 @@ Thumbs.db
 # Misc
 *.local
 .npm-cache-temp/
+
+__pycache__/

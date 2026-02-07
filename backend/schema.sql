@@ -23,3 +23,4 @@ CREATE TABLE price_history (
     timestamp TEXT,
     FOREIGN KEY (market_id) REFERENCES markets(id)
 );
+
