@@ -3,7 +3,6 @@
 export type MetricStrength = {
   momentum: number // 0-100
   stability: number
-  agreement: number
   urgency: number
 }
 
@@ -13,14 +12,6 @@ export type Trend = {
   direction: 'up' | 'down' | 'flat'
   sparklineData: number[]
   metrics: MetricStrength
-}
-
-export type Alert = {
-  id: string
-  trendName: string
-  reason: string
-  icon: string
-  severity: 'low' | 'medium' | 'high'
 }
 
 export type Market = {
@@ -42,62 +33,48 @@ export const TRENDS: Trend[] = [
     name: 'Y2K Revival',
     direction: 'up',
     sparklineData: [58, 62, 65, 68, 70, 72, 75],
-    metrics: { momentum: 82, stability: 70, agreement: 85, urgency: 65 },
+    metrics: { momentum: 82, stability: 70, urgency: 65 },
   },
   {
     id: '2',
     name: 'Indie Sleaze',
     direction: 'down',
     sparklineData: [52, 50, 48, 47, 46, 45, 42],
-    metrics: { momentum: 25, stability: 60, agreement: 45, urgency: 40 },
+    metrics: { momentum: 25, stability: 60, urgency: 40 },
   },
   {
     id: '3',
     name: 'Stanley Cup Craze',
     direction: 'up',
     sparklineData: [72, 76, 80, 82, 85, 87, 90],
-    metrics: { momentum: 92, stability: 55, agreement: 78, urgency: 88 },
+    metrics: { momentum: 92, stability: 55, urgency: 88 },
   },
   {
     id: '4',
     name: 'Coquette Aesthetic',
     direction: 'flat',
     sparklineData: [60, 61, 61, 62, 61, 61, 62],
-    metrics: { momentum: 48, stability: 85, agreement: 72, urgency: 50 },
+    metrics: { momentum: 48, stability: 85, urgency: 50 },
   },
   {
     id: '5',
     name: 'Clean Girl 2.0',
     direction: 'down',
     sparklineData: [72, 68, 64, 60, 58, 55, 52],
-    metrics: { momentum: 22, stability: 72, agreement: 65, urgency: 35 },
+    metrics: { momentum: 22, stability: 72, urgency: 35 },
   },
   {
     id: '6',
     name: 'Nostalgia Core',
     direction: 'up',
     sparklineData: [62, 65, 68, 70, 72, 74, 76],
-    metrics: { momentum: 75, stability: 68, agreement: 82, urgency: 58 },
+    metrics: { momentum: 75, stability: 68, urgency: 58 },
   },
 ]
 
-export const TOP_RISING = [
-  { id: '1', name: 'Stanley Cup Craze', momentum: 'up' as const },
-  { id: '2', name: 'Y2K Revival', momentum: 'up' as const },
-  { id: '3', name: 'Nostalgia Core', momentum: 'up' as const },
-]
+// Top Emerging / Top Dying are computed from TRENDS by weighted score (see DashboardInsight)
 
-export const TOP_FALLING = [
-  { id: '1', name: 'Clean Girl 2.0', momentum: 'down' as const },
-  { id: '2', name: 'Indie Sleaze', momentum: 'down' as const },
-]
-
-export const ALERTS: Alert[] = [
-  { id: '1', trendName: 'Indie Sleaze', reason: 'Low signal quality – conflicting sentiment', icon: '⚠️', severity: 'medium' },
-  { id: '2', trendName: 'Stanley Cup Craze', reason: 'High consensus – strong agreement across sources', icon: '✅', severity: 'low' },
-  { id: '3', trendName: 'Coquette Aesthetic', reason: 'Volatility spike – act with caution', icon: '⚡', severity: 'high' },
-  { id: '4', trendName: 'Y2K Revival', reason: 'Stable momentum – reliable trend data', icon: '📊', severity: 'low' },
-]
+// Risk alerts are derived from TRENDS by stability (see dashboard)
 
 export const MARKETS: Market[] = [
   {
