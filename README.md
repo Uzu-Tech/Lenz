@@ -20,31 +20,18 @@ Lenz aggregates prediction market data into actionable trend metrics using mathe
 ### Metric Formulations
 
 **Trend Index** — Weighted aggregate of market probabilities within a category
-```
-Trend_Index = Σ(probability_i × weight_i) / Σ(weight_i)
-```
 Captures overall trend strength by combining multiple prediction signals.
 
 **Momentum** — Rate of change in Trend Index over time
-```
-Momentum = (Trend_Index_current - Trend_Index_previous) / time_delta
-```
 Identifies accelerating or decelerating trends through temporal analysis.
 
 **Stability** — Inverse of standard deviation across constituent markets
-```
-Stability = 100 × (1 - σ(probabilities) / max_σ)
-```
 Measures signal consistency—low stability indicates volatile or conflicting predictions.
 
-**Proximity** — Distance from theoretical peak probability
-```
-Proximity = 100 × (1 - |Trend_Index - peak_threshold| / peak_threshold)
-```
+**Proximity** — Weighted aggreagate of time till contract pays out within a category
 Estimates how close a trend is to saturation or maximum adoption.
 
 These derived metrics transform raw prediction market data into strategic intelligence for content creators, marketers, and brand strategists.
-
 ---
 
 ## Features
