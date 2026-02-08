@@ -67,30 +67,6 @@ Individual Markets → Aggregation Layer → Derived Metrics → Visualization
 
 ---
 
-## Quick Start
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-# Runs on http://localhost:3000
-```
-
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app:app --reload --port 8000
-# Runs on http://localhost:8000
-```
-
-### Environment
-Create `frontend/.env.local`:
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
 ---
 
 ## API Endpoints
