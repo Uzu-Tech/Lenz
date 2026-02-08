@@ -9,10 +9,11 @@ CREATE TABLE markets (
     id INTEGER PRIMARY KEY,
     category_id INTEGER,
     question TEXT NOT NULL,
-    price REAL,
+    sentiment TEXT,
+    price INTEGER,
     volume REAL,
     participant_no INTEGER,
-    time_remaining INTEGER,
+    end_date TEXT,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
@@ -24,3 +25,12 @@ CREATE TABLE price_history (
     FOREIGN KEY (market_id) REFERENCES markets(id)
 );
 
+CREATE TABLE closing_metrics (
+    id INTEGER PRIMARY KEY,
+    category_id INTEGER,
+    trend_idx REAL,
+    trend_idx_diff REAL,
+    momentum REAL,
+    date TEXT,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);

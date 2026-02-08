@@ -14,16 +14,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    // Check localStorage for saved preference
+    // Check localStorage for saved preference first
     const saved = localStorage.getItem('theme')
     if (saved) {
-      setIsDark(saved === 'dark')
+      const dark = saved === 'dark'
+      setIsDark(dark)
+      if (dark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     } else {
       // Check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       setIsDark(prefersDark)
+      if (prefersDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
+    setMounted(true)
   }, [])
 
   useEffect(() => {
@@ -40,9 +51,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [isDark, mounted])
 
   const toggleTheme = () => {
-    setIsDark(!isDark)
+    setIsDark(prev => !prev)
   }
 
+  // Prevent flash of incorrect theme
   if (!mounted) {
     return <>{children}</>
   }

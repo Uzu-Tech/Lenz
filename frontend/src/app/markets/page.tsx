@@ -1,30 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MarketTable } from '../../components'
-import { MARKETS } from '../../data/mock'
-
-const CATEGORIES = ['All', ...Array.from(new Set(MARKETS.map((m) => m.category)))]
+import { fetchCategories, fetchMarkets } from '../../lib/api'
 
 export default function MarketsPage() {
+  const [categories, setCategories] = useState<string[]>(['All'])
   const [categoryFilter, setCategoryFilter] = useState('All')
   const [search, setSearch] = useState('')
   const [momentumFilter, setMomentumFilter] = useState<'all' | 'up' | 'down' | 'flat'>('all')
   const [timeFilter, setTimeFilter] = useState<'all' | '7d' | '14d' | '30d'>('all')
+  const [markets, setMarkets] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filteredMarkets = MARKETS.filter((m) => {
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Fetch categories and markets from backend
+        const [categoriesData, marketsData] = await Promise.all([
+          fetchCategories(),
+          fetchMarkets()
+        ])
+        
+        const categoryNames = categoriesData.map((c: any) => c.name)
+        setCategories(['All', ...categoryNames])
+        setMarkets(marketsData)
+      } catch (error) {
+        console.error('Failed to load data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const filteredMarkets = markets.filter((m) => {
     const matchCategory = categoryFilter === 'All' || m.category === categoryFilter
     const matchSearch = search === '' || m.question.toLowerCase().includes(search.toLowerCase())
-    const matchMomentum =
-      momentumFilter === 'all' || m.momentum === momentumFilter
-    const daysLeft = parseInt(m.timeRemaining, 10) || 0
-    const matchTime =
-      timeFilter === 'all' ||
-      (timeFilter === '7d' && daysLeft <= 7) ||
-      (timeFilter === '14d' && daysLeft <= 14) ||
-      (timeFilter === '30d' && daysLeft <= 30)
-    return matchCategory && matchSearch && matchMomentum && matchTime
+    // TODO: Add momentum and time filtering once we have those fields in backend
+    return matchCategory && matchSearch
   })
+
+  if (loading) {
+    return <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">Loading...</div>
+  }
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -32,7 +51,7 @@ export default function MarketsPage() {
         Trading Markets
       </h1>
       <p className="text-slate-500 dark:text-slate-400 mb-8">
-        Trade on trend probabilities – probability shown as percentage, price shown in cents
+        Trade on trend probabilities – price shown in pence
       </p>
 
       {/* Filters */}
@@ -51,7 +70,7 @@ export default function MarketsPage() {
             className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 min-w-[140px]"
           >
             <option value="All">All Categories</option>
-            {CATEGORIES.filter((c) => c !== 'All').map((c) => (
+            {categories.filter((c) => c !== 'All').map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>

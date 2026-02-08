@@ -11,7 +11,7 @@ import {
 } from 'recharts'
 
 type ProbabilityChartProps = {
-  data: Array<{ day: string; value: number }>
+  data: Array<{ date?: string; day?: string; value: number; timestamp?: string }>
   className?: string
   height?: number
   unit?: 'percent' | 'cents'
@@ -27,12 +27,32 @@ export function ProbabilityChart({
   showHeader = true,
   title = 'Probability Over Time',
 }: ProbabilityChartProps) {
+  // Format x-axis labels based on data range
+  const formatXAxis = (timestamp: string) => {
+    if (!timestamp) return ''
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diffHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    
+    if (diffHours < 24) {
+      // Show time for last 24 hours
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    } else if (diffHours < 168) {
+      // Show day and time for last week
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit' })
+    } else {
+      // Show date for older data
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+  }
+
   const chartData = data.map((d) => ({
     ...d,
+    displayLabel: d.timestamp ? formatXAxis(d.timestamp) : (d.date || d.day),
     displayValue: Math.round(d.value),
   }))
 
-  const formatValue = (value: number) => (unit === 'cents' ? `${value}¢` : `${value}%`)
+  const formatValue = (value: number) => (unit === 'cents' ? `${value.toFixed(1)}p` : `${value.toFixed(1)}%`)
 
   return (
     <div className={`rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-4 ${className}`}>
@@ -52,11 +72,12 @@ export function ProbabilityChart({
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
             <XAxis
-              dataKey="day"
+              dataKey="displayLabel"
               stroke="#64748b"
               tick={{ fill: '#94a3b8', fontSize: 12 }}
               axisLine={false}
               tickLine={false}
+              minTickGap={50}
             />
             <YAxis
               stroke="#64748b"

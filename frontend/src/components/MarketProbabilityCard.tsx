@@ -9,14 +9,51 @@ type MarketProbabilityCardProps = {
 }
 
 export function MarketProbabilityCard({ market }: MarketProbabilityCardProps) {
-  const [timeWindow, setTimeWindow] = useState<'1D' | '1W' | '1M' | 'ALL'>('1W')
+  const [timeWindow, setTimeWindow] = useState<'1D' | '1W' | '1M' | 'ALL'>('ALL')
 
   const chartData = useMemo(() => {
     const history = market.probabilityHistory
-    if (timeWindow === 'ALL') return history
-    if (timeWindow === '1M') return history.slice(-8)
-    if (timeWindow === '1W') return history.slice(-5)
-    return history.slice(-2)
+    if (history.length === 0) return history
+    
+    // Filter by time window first
+    let filtered = history
+    if (timeWindow !== 'ALL') {
+      const now = new Date()
+      const cutoffTime = new Date()
+      
+      if (timeWindow === '1D') {
+        cutoffTime.setDate(cutoffTime.getDate() - 1)
+      } else if (timeWindow === '1W') {
+        cutoffTime.setDate(cutoffTime.getDate() - 7)
+      } else if (timeWindow === '1M') {
+        cutoffTime.setMonth(cutoffTime.getMonth() - 1)
+      }
+      
+      filtered = history.filter((item: any) => {
+        if (!item.timestamp) return true
+        const itemDate = new Date(item.timestamp)
+        return itemDate >= cutoffTime
+      })
+    }
+    
+    // Downsample to ~100 points for all time windows
+    const targetPoints = 100
+    if (filtered.length <= targetPoints) return filtered
+    
+    // Calculate step size - take every Nth point
+    const step = Math.ceil(filtered.length / targetPoints)
+    const downsampled = []
+    
+    for (let i = 0; i < filtered.length; i += step) {
+      downsampled.push(filtered[i])
+    }
+    
+    // Always include the last point to show current state
+    if (downsampled[downsampled.length - 1] !== filtered[filtered.length - 1]) {
+      downsampled.push(filtered[filtered.length - 1])
+    }
+    
+    return downsampled
   }, [market.probabilityHistory, timeWindow])
 
   const change = useMemo(() => {
@@ -34,7 +71,7 @@ export function MarketProbabilityCard({ market }: MarketProbabilityCardProps) {
                 Price
               </p>
               <p className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-                {market.price}¢
+                {market.price}p
               </p>
             </div>
             <div>
@@ -79,6 +116,7 @@ export function MarketProbabilityCard({ market }: MarketProbabilityCardProps) {
         <div className="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
           <span>Volume: {market.volume}</span>
           <span>Time Remaining: {market.timeRemaining}</span>
+          <span>{chartData.length} data points</span>
         </div>
       </div>
       <div className="mt-6">
