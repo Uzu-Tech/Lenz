@@ -34,6 +34,45 @@ Estimates how close a trend is to saturation or maximum adoption.
 These derived metrics transform raw prediction market data into strategic intelligence for content creators, marketers, and brand strategists.
 ---
 
+## Derived Metrics Formulas
+Trend Index (TI)
+We center probabilities around 0.5 and include directional sign per market:  
+$$
+TI = \frac{\sum_{i=1}^{n} w_i \cdot s_i \cdot (p_i - 0.5)}{\sum_{i=1}^{n} w_i}
+\(p_i\) = market probability  
+\(s_i\) = direction sign (+1 emerging, −1 declining)  
+\(w_i\) = market weight  
+$$
+
+Stability (S)
+Defined from the standard deviation of the Trend Index series:
+\[
+S = 100 - \sigma(TI)
+\]
+\(\sigma(TI)\) = rolling standard deviation of Trend Index  
+Higher S ⇒ more consistent signal
+
+Momentum (M)
+Momentum is an EMA of Trend Index differences with smoothing factor \( \alpha = \tfrac{1}{4} \).
+Step 1 — difference series:
+\[
+\Delta TI_t = TI_t - TI_{t-1}
+\]
+Step 2 — EMA update:
+\[
+M_t = \alpha \cdot \Delta TI_t + (1 - \alpha)\cdot M_{t-1}
+\quad\text{where } \alpha = \tfrac{1}{4}
+\]
+
+Proximity (P)
+Weighted inverse time‑to‑resolution:
+\[
+P = \frac{\sum_{i=1}^{n} w_i \cdot \frac{1}{T_i}}{\sum_{i=1}^{n} w_i}
+\]
+\(T_i\) = time until contract resolves
+
+---
+
 ## Features
 
 **Dashboard** — Category cards displaying calculated metrics with sparkline visualizations and urgency rankings
