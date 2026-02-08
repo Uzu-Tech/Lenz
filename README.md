@@ -1,41 +1,17 @@
 # Lenz
 
-Prediction market and trend insights platform. A modern web app UI skeleton for exploring trends and trading on social media predictions.
+## Overview
+Lenz is a cutting-edge platform designed to aggregate prediction market data into essential metrics that propel decision-making and strategic insights. Our core innovations focus on the following metrics:
 
-## Features
+### Core Metrics
+1. **Trend Index** - A metric that identifies and measures the direction of market movements, providing insights into potential future trends.
+2. **Momentum** - Captures the strength of market movements, allowing users to recognize when momentum is building or waning.
+3. **Stability** - Assesses the reliability and consistency of market predictions, helping users to gauge market volatility.
+4. **Proximity** - Measures how close predictions are to actual outcomes, enhancing the accuracy of forecasting.
 
-- **Insight Dashboard** (`/dashboard`) – Category cards, metric strip, top rising/falling, signal quality alerts
-- **Category Detail** (`/dashboard/category/[id]`) – Radar chart, probability history, driver markets
-- **Trading Markets** (`/markets`) – Market list table with filter/search
-- **Market Detail** (`/markets/[id]`) – Probability chart, trade panel, order book, metrics
+## Team
+- **Kobi**
+- **Zara**
+- **Qais**
 
-## Tech
-
-- Next.js 14 (App Router)
-- React 18
-- TypeScript
-- Tailwind CSS
-- Recharts (available for charts; currently using placeholder divs)
-- Mock data – no backend required
-
-## Run
-
-```bash
-npm install
-npm run dev
-```
-
-Open http://localhost:3000 (redirects to `/dashboard`).
-
-## Components
-
-- `CategoryCard` – Category name, trend index, arrow, sparkline
-- `MetricBadge` / `MetricStrip` – Metric display
-- `SparklineChart` – Placeholder sparkline
-- `RadarMetricsChart` – Placeholder radar
-- `ProbabilityChart` – Placeholder bar chart
-- `MomentumArrow` – ↑ / ↓ / →
-- `AlertCard` – Signal quality alerts
-- `MarketTable` – Markets list with filters
-- `TradePanel` – Buy YES / Buy NO inputs
-- `OrderBookMock` – Bids/asks display
+We invite you to explore Lenz and leverage our innovative metrics for a more informed approach to market predictions.
