@@ -1,41 +1,226 @@
 # Lenz
 
-Prediction market and trend insights platform. A modern web app UI skeleton for exploring trends and trading on social media predictions.
+**Quantified cultural trend intelligence through prediction market analytics**
+
+Lenz aggregates prediction market data into actionable trend metrics using mathematical formulations. The platform transforms individual market predictions into four core signals: Trend Index, Momentum, Stability, and Proximity—enabling data-driven decision-making for cultural forecasting.
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Python-green?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
+
+---
+
+## Core Innovation
+
+**Problem:** Prediction markets generate fragmented data across multiple questions. Individual market probabilities don't provide holistic trend intelligence.
+
+**Solution:** Lenz aggregates related prediction markets into category-level metrics using derived mathematical formulations:
+
+### Metric Formulations
+
+**Trend Index** — Weighted aggregate of market probabilities within a category  
+Captures overall trend strength by combining multiple prediction signals.
+
+**Momentum** — Rate of change in Trend Index over time  
+Identifies accelerating or decelerating trends through temporal analysis.
+
+**Stability** — Inverse of standard deviation across constituent markets  
+Measures signal consistency—low stability indicates volatile or conflicting predictions.
+
+**Proximity** — Weighted aggregate of time till contract pays out within a category  
+Estimates how close a trend is to saturation or maximum adoption.
+
+These derived metrics transform raw prediction market data into strategic intelligence for content creators, marketers, and brand strategists.
+
+---
+
+## Derived Metrics Formulas
+
+### Trend Index (TI)
+
+We center probabilities around 0.5 and include directional sign per market:
+
+$$
+TI = \frac{\sum_{i=1}^{n} w_i \cdot s_i \cdot (p_i - 0.5)}{\sum_{i=1}^{n} w_i}
+$$
+
+where:
+- $p_i$ = market probability
+- $s_i$ = direction sign (+1 emerging, −1 declining)
+- $w_i$ = market weight
+
+### Stability (S)
+
+Defined from the standard deviation of the Trend Index series:
+
+$$
+S = 100 - \sigma(TI)
+$$
+
+where $\sigma(TI)$ = rolling standard deviation of Trend Index  
+Higher S ⇒ more consistent signal
+
+### Momentum (M)
+
+Momentum is an EMA of Trend Index differences with smoothing factor $\alpha = \tfrac{1}{4}$.
+
+**Step 1** — difference series:
+
+$$
+\Delta TI_t = TI_t - TI_{t-1}
+$$
+
+**Step 2** — EMA update:
+
+$$
+M_t = \alpha \cdot \Delta TI_t + (1 - \alpha) \cdot M_{t-1} \quad \text{where } \alpha = \tfrac{1}{4}
+$$
+
+### Proximity (P)
+
+Weighted inverse time‑to‑resolution:
+
+$$
+P = \frac{\sum_{i=1}^{n} w_i \cdot \frac{1}{T_i}}{\sum_{i=1}^{n} w_i}
+$$
+
+where $T_i$ = time until contract resolves
+
+---
 
 ## Features
 
-- **Insight Dashboard** (`/dashboard`) – Category cards, metric strip, top rising/falling, signal quality alerts
-- **Category Detail** (`/dashboard/category/[id]`) – Radar chart, probability history, driver markets
-- **Trading Markets** (`/markets`) – Market list table with filter/search
-- **Market Detail** (`/markets/[id]`) – Probability chart, trade panel, order book, metrics
+**Dashboard** — Category cards displaying calculated metrics with sparkline visualizations and urgency rankings
 
-## Tech
+**Category Detail** — Radar charts showing multi-metric analysis with expandable driver markets (constituent predictions)
 
-- Next.js 14 (App Router)
-- React 18
-- TypeScript
-- Tailwind CSS
-- Recharts (available for charts; currently using placeholder divs)
-- Mock data – no backend required
+**Trading Markets** — Filter and trade on individual prediction questions that feed into category metrics
 
-## Run
+**Market Detail** — Probability history charts with trade execution and real-time metric updates
 
-```bash
-npm install
-npm run dev
+---
+
+## Architecture
+
+### Frontend
+- **Next.js 16** with App Router and TypeScript
+- **Tailwind CSS** custom design system
+- **Recharts** for metric visualization
+- Component library: CategoryCard, MetricBadge, ProbabilityChart, TradePanel
+
+### Backend
+- **FastAPI** with async endpoints
+- **SQLite** database schema: categories, markets, price_history
+- CORS-enabled API for metric calculation and market data
+
+### Data Flow
+```
+Individual Markets → Aggregation Layer → Derived Metrics → Visualization
+     (probabilities)      (formulations)    (Trend Index, etc.)    (Dashboard)
 ```
 
-Open http://localhost:3000 (redirects to `/dashboard`).
+---
 
-## Components
+## API Endpoints
 
-- `CategoryCard` – Category name, trend index, arrow, sparkline
-- `MetricBadge` / `MetricStrip` – Metric display
-- `SparklineChart` – Placeholder sparkline
-- `RadarMetricsChart` – Placeholder radar
-- `ProbabilityChart` – Placeholder bar chart
-- `MomentumArrow` – ↑ / ↓ / →
-- `AlertCard` – Signal quality alerts
-- `MarketTable` – Markets list with filters
-- `TradePanel` – Buy YES / Buy NO inputs
-- `OrderBookMock` – Bids/asks display
+**Categories**
+- `GET /api/categories` — List all categories with calculated metrics
+- `GET /api/categories/:id` — Category detail with constituent markets
+
+**Markets**
+- `GET /api/markets` — List all prediction markets
+- `GET /api/markets/:id` — Market detail with probability history
+- `POST /api/markets/:id/trade` — Execute trade (updates metrics)
+
+---
+
+## Data Model
+
+### Category
+```typescript
+{
+  id: string
+  name: string              // "Y2K Revival"
+  trend_idx: number         // Calculated via weighted aggregation
+  momentum: number          // Rate of change
+  stability: number         // Inverse standard deviation
+  proximity: number         // Distance from peak
+  urgency: number           // Composite time-sensitivity score
+}
+```
+
+### Market
+```typescript
+{
+  id: string
+  question: string          // "Will Y2K fashion dominate Q2?"
+  category_id: string       // Links to parent category
+  probability: number       // Current market probability (0-1)
+  price: number             // Price in pence
+  volume: number
+  participant_no: number
+  price_history: Array      // Time-series data
+}
+```
+
+---
+
+## Use Cases
+
+**Content Creators** — Identify emerging aesthetics before mainstream adoption using Momentum and Proximity signals
+
+**Brand Strategists** — Allocate marketing budget to high Trend Index, high Stability categories for reliable ROI
+
+**Trend Forecasters** — Track Momentum shifts and Stability degradation to predict trend lifecycle phases
+
+---
+
+## Technical Highlights
+
+- Mathematical aggregation layer transforming prediction markets into strategic metrics
+- Real-time metric recalculation on market updates
+- Type-safe TypeScript implementation across frontend
+- SQLite persistence with price history tracking for temporal analysis
+- Responsive visualization library with radar charts and sparklines
+
+---
+
+## Roadmap
+
+- Machine learning models for predictive Momentum forecasting
+- Social media API integration for automated market creation
+- WebSocket live updates for real-time metric streaming
+- Advanced statistical formulations (Bayesian aggregation, time-weighted decay)
+- User authentication with portfolio tracking
+
+---
+
+## Repository Structure
+
+```
+Lenz/
+├── frontend/
+│   ├── src/
+│   │   ├── app/              # Next.js routes
+│   │   ├── components/       # Metric visualization components
+│   │   ├── lib/api.ts        # API client
+│   │   └── data/mock.ts      # Demo data
+│   └── tailwind.config.ts
+├── backend/
+│   ├── app.py                # FastAPI + metric calculations
+│   ├── routes/               # Category & market endpoints
+│   ├── db.py                 # SQLite connection
+│   └── schema.sql            # Database schema
+└── README.md
+```
+
+---
+
+## Team
+
+Developed by **Kobi**, **Zara**, and **Qais**
+
+---
+
+**© 2026 Lenz. Quantified cultural intelligence through prediction market analytics.**
